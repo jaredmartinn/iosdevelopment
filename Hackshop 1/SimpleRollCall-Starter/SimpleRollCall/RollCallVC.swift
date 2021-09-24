@@ -67,19 +67,24 @@ class RollCallVC: UIViewController {
         // Note that you can't just say button.image = something because
         // a button can have different states.
         // MARK: >> Your Code Here <<
+        button.setImage(UIImage(systemName: "xmark"), for: .normal)
         
         // Create a symbol configuration to customize the appearance of our symbol image.
         // The procedure is described in this article:
         // https://developer.apple.com/documentation/uikit/uiimage/configuring_and_displaying_symbol_images_in_your_ui
         // MARK: >> Your Code Here <<
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+        button.setPreferredSymbolConfiguration(config, forImageIn: .normal)
         
         // This changes the color of the image
         // MARK: >> Your Code Here <<
+        button.tintColor = .white
         
         // Set the background color
         // What's the different between .red and .systemRed?
         // Try typing them out and hovering on it while holding option(⌥)
         // MARK: >> Your Code Here <<
+        button.backgroundColor = .systemRed
         
         // Because we want to bind both buttons to the same @objc callback, we will use tag to
         // identify which button is tapped.
@@ -95,6 +100,32 @@ class RollCallVC: UIViewController {
         let button = UIButton()
         
         // MARK: >> Your Code Here <<
+        // Set the button image to system glyph named xmark.
+        // Checkout this blog for more information about SF Symbol:
+        // https://www.avanderlee.com/swift/sf-symbols-guide/
+        //
+        // Note that you can't just say button.image = something because
+        // a button can have different states.
+        // MARK: >> Your Code Here <<
+        button.setImage(UIImage(systemName: "checkmark"), for: .normal)
+        
+        // Create a symbol configuration to customize the appearance of our symbol image.
+        // The procedure is described in this article:
+        // https://developer.apple.com/documentation/uikit/uiimage/configuring_and_displaying_symbol_images_in_your_ui
+        // MARK: >> Your Code Here <<
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+        button.setPreferredSymbolConfiguration(config, forImageIn: .normal)
+        
+        // This changes the color of the image
+        // MARK: >> Your Code Here <<
+        button.tintColor = .white
+        
+        // Set the background color
+        // What's the different between .red and .systemRed?
+        // Try typing them out and hovering on it while holding option(⌥)
+        // MARK: >> Your Code Here <<
+        button.backgroundColor = .systemGreen
+        
         
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -111,6 +142,10 @@ class RollCallVC: UIViewController {
         // Add the components into view hierarchy
 
         // MARK: >> Your Code Here <<
+        
+        view.addSubview(nameLabel)
+        view.addSubview(presentButton)
+        view.addSubview(absentButton)
         
         // Now it should look like this
         // -------view hierarchy--------
@@ -148,7 +183,19 @@ class RollCallVC: UIViewController {
         // y
         NSLayoutConstraint.activate([
             // MARK: >> Your Code Here <<
-        ])
+            view.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -200),
+            view.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor, constant: -50),
+                                        view.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant:  50),
+                                        nameLabel.bottomAnchor.constraint(equalTo: presentButton.topAnchor, constant: -300),
+                                        view.leadingAnchor.constraint(equalTo: presentButton.leadingAnchor, constant: -80),
+                                        presentButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -60),
+                                        presentButton.widthAnchor.constraint(equalTo: presentButton.heightAnchor),
+                                        absentButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -80),
+                                        view.centerXAnchor.constraint(equalTo: absentButton.leadingAnchor, constant: -60),
+                                        absentButton.widthAnchor.constraint(equalTo: absentButton.heightAnchor),
+                                        absentButton.centerYAnchor.constraint(equalTo: presentButton.centerYAnchor)
+                                        ])
+                                        
         
         // Bind the @objc function to the button's touchUpInside event. Touch up inside means
         // the users tap and lift the finger inside the button, which is basically a regular
