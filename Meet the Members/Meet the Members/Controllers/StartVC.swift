@@ -57,6 +57,7 @@ class StartVC: UIViewController {
         // where you will find all the available APIs.
         
         // MARK: >> Your Code Here <<
+        button.tintColor = .black
         
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -112,9 +113,13 @@ class StartVC: UIViewController {
         ])
         
         // MARK: >> Your Code Here <<
+        view.addSubview(startButton)
         
         NSLayoutConstraint.activate([
             // MARK: >> Your Code Here <<
+            startButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            startButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            startButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50)
         ])
         
         
