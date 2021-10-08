@@ -15,8 +15,8 @@ class MainVC: UIViewController {
     var time: Int?=nil
     var buttonarr: [UIButton] = []
     var curranswer: String = ""
-    var correct: Int=0
-    var paused: Bool=false
+    static var correct: Int = 0
+    static var paused: Bool=false
     
     // MARK: STEP 7: UI Customization
     // Action Items:
@@ -52,7 +52,7 @@ class MainVC: UIViewController {
         }
         
     }()
-
+    
     let stats: UIButton = {
         let button = UIButton()
         
@@ -66,10 +66,31 @@ class MainVC: UIViewController {
         return button
     }()
     
+    private let score: UILabel = {
+        let label = UILabel()
+        
+        // == UIColor.darkGray
+        label.textColor = .darkGray
+        
+        label.text = String(correct)
+        
+        // == NSTextAlignment(expected type).center
+        label.textAlignment = .center
+        // == UIFont.systemFont(ofSize: 27, UIFont.weight.medium)
+        label.font = .systemFont(ofSize: 27, weight: .medium)
+        // Must have if you are using constraints.
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     let pause: UIButton = {
         let button = UIButton()
-        
-        button.setTitle("Pause", for: .normal)
+        if paused==false {
+            button.setTitle("Pause", for: .normal) }
+        else {
+            button.setTitle("Resume", for: .normal)
+        }
         
         button.setTitleColor(.black, for: .normal)
         button.tintColor = .black
@@ -91,9 +112,7 @@ class MainVC: UIViewController {
         view.backgroundColor = .white
         
         // Create a timer that calls timerCallback() every one second
-        if (paused==false){
-            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
-        }
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCallback), userInfo: nil, repeats: true)
         
         // MARK: STEP 6: Adding Subviews and Constraints
         // Action Items:
@@ -103,7 +122,7 @@ class MainVC: UIViewController {
         
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 75),
             //imageView.centerXAnchor.constraint(equalTo: imageView.centerYAnchor),
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -75),
@@ -170,11 +189,19 @@ class MainVC: UIViewController {
             stats.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
         ])
         
+        
+        view.addSubview(score)
+        NSLayoutConstraint.activate([
+            score.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            score.leadingAnchor.constraint(equalTo: view.trailingAnchor, constant: -45)
+        ])
         view.addSubview(pause)
         NSLayoutConstraint.activate([
             pause.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
-            pause.leadingAnchor.constraint(equalTo: view.trailingAnchor, constant: -45)
+            pause.leadingAnchor.constraint(equalTo: score.leadingAnchor, constant: -100)
         ])
+
+        
         pause.addTarget(self, action: #selector(didTapPause(_:)), for: .touchUpInside)
         
         // MARK: STEP 10: Stats Button
@@ -208,6 +235,7 @@ class MainVC: UIViewController {
         
         // MARK: >> Your Code Here <<
         imageView.image=image
+        /*
         let button1: UIButton = {
             let button = UIButton()
             button.setTitle(choices[0], for: .normal)
@@ -236,11 +264,9 @@ class MainVC: UIViewController {
             button.translatesAutoresizingMaskIntoConstraints = false
             return button
         }()
-        //buttons[0].tag=button1
-        //buttons([button1, button2, button3, button4])
-        imageView.image=image
+        buttonarr=[button1, button2, button3, button4] */
         curranswer = answer
-        buttonarr=[button1, button2, button3, button4]
+        imageView.image=image
         buttons[0].setTitle(choices[0], for: .normal)
         buttons[1].setTitle(choices[1], for: .normal)
         buttons[2].setTitle(choices[2], for: .normal)
@@ -269,7 +295,9 @@ class MainVC: UIViewController {
         if time==nil {
             time=5
         }
-        time!-=1;
+        if(MainVC.paused==false){
+            time!-=1
+        }
         if (!(time==nil) && time!==0){
             let vc = MainVC()
             present(vc, animated: true, completion: nil)
@@ -282,7 +310,9 @@ class MainVC: UIViewController {
         // MARK: >> Your Code Here <<
         if sender.currentTitle!==curranswer {
             //sender.setTitleColor(.green, for: .normal)
-            correct+=1
+            MainVC.correct+=1
+            //score.score1+=1
+            score.text=String(MainVC.correct)
             sender.setTitleColor(.green, for: .normal)
             UIView.animate(withDuration: 2, delay: 0.0, options: [.curveLinear, .repeat, .autoreverse], animations: {sender.alpha = 0.01}, completion: nil)
         }
@@ -295,18 +325,18 @@ class MainVC: UIViewController {
     
     @objc func didTapPause(_ sender: UIButton){
         if (pause.currentTitle=="Pause"){
-            paused=true
+            MainVC.paused=true
             pause.setTitle("Resume", for: .normal)
         }
         else{
-            paused=false
+            MainVC.paused=false
             pause.setTitle("Pause", for: .normal)
         }
     }
     
     @objc func didTapStats(_ sender: UIButton) {
         
-        let vc = StatsVC(data: "Hello", c: correct)
+        let vc = StatsVC(data: "Hello", c: MainVC.correct)
         
         vc.modalPresentationStyle = .fullScreen
         
