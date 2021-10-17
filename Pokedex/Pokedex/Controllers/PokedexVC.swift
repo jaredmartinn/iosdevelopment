@@ -14,6 +14,14 @@ class PokedexVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        let collectionView: UICollectionView = {
+            let layout = UICollectionViewFlowLayout()
+            layout.minimumLineSpacing = 30
+            layout.minimumInteritemSpacing = 30
+            let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+            collectionView.register(PokedexViewCell.self, forCellWithReuseIdentifier: PokedexViewCell.reuseIdentifier)
+            return collectionView
+        }()
     }
 }
 

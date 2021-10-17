@@ -17,6 +17,10 @@ class MainVC: UIViewController {
     var curranswer: String = ""
     static var correct: Int = 0
     static var paused: Bool=false
+    static var statistics: [Int] = [0, 0, 0]
+    static var currindex: Int=0
+    static var longstreak: Int=0
+    static var currstreak: Int=0
     
     // MARK: STEP 7: UI Customization
     // Action Items:
@@ -315,12 +319,20 @@ class MainVC: UIViewController {
             score.text=String(MainVC.correct)
             sender.setTitleColor(.green, for: .normal)
             UIView.animate(withDuration: 2, delay: 0.0, options: [.curveLinear, .repeat, .autoreverse], animations: {sender.alpha = 0.01}, completion: nil)
+            MainVC.statistics[MainVC.currindex%3]=1
+            MainVC.currstreak+=1
+            if (MainVC.currstreak>MainVC.longstreak){
+                MainVC.longstreak=MainVC.currstreak
+            }
         }
         else{
             sender.setTitleColor(.red, for: .normal)
+            MainVC.statistics[MainVC.currindex%3]=0
+            MainVC.currstreak=0
         }
         let vc = MainVC()
         present(vc, animated: true, completion: nil)
+        MainVC.currindex+=1
     }
     
     @objc func didTapPause(_ sender: UIButton){
@@ -336,7 +348,7 @@ class MainVC: UIViewController {
     
     @objc func didTapStats(_ sender: UIButton) {
         
-        let vc = StatsVC(data: "Hello", c: MainVC.correct)
+        let vc = StatsVC(data: "Hello", c: MainVC.statistics.reduce(0, +), s: MainVC.longstreak)
         
         vc.modalPresentationStyle = .fullScreen
         
